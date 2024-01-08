@@ -1,4 +1,4 @@
-const socket = new WebSocket('ws://localhost:5000'); // Connect to the WebSocket server
+const socket = new WebSocket('ws://localhost:5000'); 
 
 socket.addEventListener('message', function (event) {
     const chatMessages = document.getElementById('chat-messages');

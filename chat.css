@@ -44,19 +44,31 @@ body {
 
 #answerInput {
     width: calc(100% - 40px);
-    padding: 10px;
+    padding: 15px;
     box-sizing: border-box;
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 0.5px solid #ddd;
     outline: none;
 }
 
 #sendButton {
-    width: 40px;
-    height: 40px;
-    background-color: #3498db;
-    color: #fff;
+    width: 50px;
+    height: 45px;
     border: none;
     cursor: pointer;
+    background-color: #459dd8; 
     outline: none;
+}
+
+#chatForm {
+    display: flex;
+    align-items: center;
+}
+
+#answerInput {
+    flex: 1;
+}
+
+#sendButton {
+    margin-left: 10px; /* Adjust the margin as needed */
 }
