@@ -1,25 +1,34 @@
-const socket = new WebSocket('ws://localhost:5000'); 
+function generateOptionButtons(options) {
+    var optionsContainer = document.getElementById('options-container');
+    if(options.length!=0) {
+    optionsContainer.innerHTML = "<p>Choose an option:</p>";
+    }
 
-socket.addEventListener('message', function (event) {
-    const chatMessages = document.getElementById('chat-messages');
-    const message = document.createElement('div');
-    message.className = 'message bot';
-    message.innerHTML = '<p>' + event.data + '</p>';
-    chatMessages.appendChild(message);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-});
+    for (var i = 0; i < options.length; i++) {
+        var button = document.createElement('button');
+        button.textContent = options[i];
+        button.onclick = function() {
+            selectOption(this.textContent);
+        };
+        optionsContainer.appendChild(button);
+    }
+}
+
+function selectOption(optionText) {
+    document.getElementById('user-input').value = optionText;
+}
+
+var exampleOptions = ['Medical Prescription', 'Depression Test'];
+
+generateOptionButtons(exampleOptions);
 
 function sendMessage() {
-    const answerInput = document.getElementById('answerInput');
-    const answer = answerInput.value;
+    const socket = new WebSocket("ws://localhost:8005/");
+    var intopt = document.getElementById('ipms').value;  // Assuming 'ipms' is an input element
 
-    const chatMessages = document.getElementById('chat-messages');
-    const message = document.createElement('div');
-    message.className = 'message user';
-    message.innerHTML = '<p>' + answer + '</p>';
-    chatMessages.appendChild(message);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    socket.send(answer);
-    answerInput.value = '';
+    // Wait for the WebSocket to open before sending the message
+    socket.addEventListener('open', function (event) {
+        // Send the intopt value to the Python server
+        socket.send(JSON.stringify({ intopt: intopt }));
+    });
 }

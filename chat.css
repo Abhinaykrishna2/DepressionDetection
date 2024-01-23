@@ -1,74 +1,99 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    margin: 0;
 }
 
-#chat-container {
-    width: 1000px;
-    background-color: #fff;
-    border-radius: 8px;
+.chat-container {
+    width: 700px;
+    height: 600px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#chat-header {
+.chat-header {
     background-color: #3498db;
-    color: #fff;
-    padding: 15px;
+    color: white;
+    padding: 20px;
     text-align: center;
 }
 
-#chat-messages {
-    padding: 180px;
-    max-height: 800px;
+h1 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.chat-body {
+    padding: 20px;
+    max-height: 400px;
     overflow-y: auto;
 }
 
-.message {
+.chat-message {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
     margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.message.bot {
+.received {
     text-align: left;
 }
 
-.message.user {
+.sent {
     text-align: right;
 }
 
-#answerInput {
-    width: calc(100% - 40px);
-    padding: 15px;
-    box-sizing: border-box;
-    border: none;
-    border-top: 0.5px solid #ddd;
-    outline: none;
+.options {
+    text-align: center;
+    padding: 10px;
 }
 
-#sendButton {
-    width: 50px;
-    height: 45px;
-    border: none;
-    cursor: pointer;
-    background-color: #459dd8; 
-    outline: none;
+.options p {
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
-#chatForm {
+.chat-input {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    margin-top: 10%;
 }
 
-#answerInput {
-    flex: 1;
+input[type="text"] {
+    width: 80%;
+    margin-bottom: 10px; 
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-#sendButton {
-    margin-left: 10px; /* Adjust the margin as needed */
+button {
+    width: 80%;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #217dbb;
 }

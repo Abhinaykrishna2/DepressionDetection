@@ -1,32 +1,23 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
-import os
+import asyncio
+import websockets
+import json
 
-app = Flask(__name__)
+async def handle_message(websocket, path):
+    async for message in websocket:
+        # Parse the JSON message
+        data = json.loads(message)
 
-conversations = []
+        # Access the 'intopt' value
+        intopt_value = data.get('intopt', '')
 
-@app.route('/')
-def index():
-    return render_template('index.html', conversations=conversations)
+        # Process the intopt_value as needed
+        # ...
 
-@app.route('/process_form', methods=['POST'])
-def process_form():
-    user_input = request.form['user_input']
-    response = process_user_input(user_input)
-    conversations.append({'user': user_input, 'bot': response})
-    return jsonify({'user_input': user_input, 'bot_response': response})
+        # Send a response if necessary
+        response = {'status': 'success'}
+        await websocket.send(json.dumps(response))
 
-def process_user_input(user_input):
-    # Add your processing logic here
-    # You can call other functions, APIs, or perform any other tasks based on user_input
-    # For demonstration purposes, simply echoing back the user input.
-    return "You entered: " + user_input
+start_server = websockets.serve(handle_message, "localhost", 8005)
 
-# Serve static files (CSS in this case)
-@app.route('chatbot.html')
-def static_files(filename):
-    root_dir = os.path.dirname(os.getcwd())
-    return send_from_directory(os.path.join(root_dir, 'static'), filename)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
