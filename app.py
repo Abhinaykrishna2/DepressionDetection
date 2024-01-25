@@ -1,23 +1,41 @@
 import asyncio
 import websockets
-import json
 
-async def handle_message(websocket, path):
-    async for message in websocket:
-        # Parse the JSON message
-        data = json.loads(message)
+global_data = {
+    'InitialRequest': ''
+}  # for data preservance
 
-        # Access the 'intopt' value
-        intopt_value = data.get('intopt', '')
+flags = {}  # for data communication to js websocket
 
-        # Process the intopt_value as needed
-        # ...
+async def handle_connection(websocket, path):
+    try:
+        async for message in websocket:
+            print(f"Received message from client: {message}")
 
-        # Send a response if necessary
-        response = {'status': 'success'}
-        await websocket.send(json.dumps(response))
+            if message.lower() == 'medical prescription':
+                global_data['InitialRequest'] = 'medical prescription'
+                msg = 'Sure, May I know what are those medical issues troubling you'
 
-start_server = websockets.serve(handle_message, "localhost", 8005)
+                flags = {
+                    'msg': msg,
+                    'nextEvent': 'prescribeMedicine',  # function with the same name to be called next
+                    'option': []
+                }
+                await websocket.send(str(flags))
+    except websockets.exceptions.ConnectionClosedError:
+        print("Connection closed")
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+async def start_server():
+    server = await websockets.serve(handle_connection, "localhost", 8005)
+    print("Server started on ws://localhost:8005")
+
+    try:
+        await server.wait_closed()
+    except asyncio.CancelledError:
+        pass
+
+async def main():
+    await start_server()
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -13,22 +13,30 @@ function generateOptionButtons(options) {
         optionsContainer.appendChild(button);
     }
 }
-
 function selectOption(optionText) {
     document.getElementById('user-input').value = optionText;
 }
-
 var exampleOptions = ['Medical Prescription', 'Depression Test'];
-
 generateOptionButtons(exampleOptions);
 
-function sendMessage() {
-    const socket = new WebSocket("ws://localhost:8005/");
-    var intopt = document.getElementById('ipms').value;  // Assuming 'ipms' is an input element
+const socket = new WebSocket("ws://localhost:8005");
 
-    // Wait for the WebSocket to open before sending the message
-    socket.addEventListener('open', function (event) {
-        // Send the intopt value to the Python server
-        socket.send(JSON.stringify({ intopt: intopt }));
+function pyconnect(data){
+    
+    socket.addEventListener("open", () => {
+        console.log("Connected to Python");
+        socket.send(data);
     });
+    var response;
+    socket.addEventListener("message", (event) => {
+        response = event.data;
+        console.log(`Received message from Python: ${response}`);
+    });
+    return response;
+}
+
+function sendMessage() {
+    var data = document.getElementById('user-input').value;
+    console.log('Data being sent')
+    pyconnect(data)
 }
