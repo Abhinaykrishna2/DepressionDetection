@@ -1,4 +1,5 @@
 const socket = new WebSocket("ws://127.0.0.1:8005");
+var cnt=0;
 
 socket.addEventListener("open", () => {
     console.log("Connected to Python");
@@ -40,6 +41,12 @@ socket.addEventListener("message", (event) => {
     console.log('Breakpoint')
     const response = JSON.parse(event.data);
     console.log("Received response from Python:", response);
+    if(response.cnt!=0)
+    {
+        cnt+=response.cnt;
+    }
+    console.log('----------------------',cnt,'--------------------');
+    console.log('-------------------------------------------------');
     updatedUI(response);
 });
 
@@ -62,16 +69,20 @@ function sendMessage() {
     if (exampleOptions[0] == 'Medical Prescription') {
         data += '==' + 'process_data'
     } else {
-        
-        buttonClickPromise.then(function() {
-            console.log('Button clicked');
-            data=document.getElementById('user-input').value;            
-        });
-        console.log('#####');
-        console.log(data);
-        console.log(nextEvent);
-        console.log('#####');
-        data += '==' + nextEvent;
+        if(nextEvent=='end')
+        {
+
+        }else{
+            buttonClickPromise.then(function() {
+                console.log('Button clicked');
+                data=document.getElementById('user-input').value;            
+            });
+            console.log('#####');
+            console.log(data);
+            console.log(nextEvent);
+            console.log('#####');
+            data += '==' + nextEvent;
+        }
     }
 
     console.log(data);

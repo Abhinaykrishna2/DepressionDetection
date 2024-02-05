@@ -23,6 +23,7 @@ async def process_data(websocket):
         response={
             "msg" : "May I kindly request a brief description of your current medical condition?",
             "option" : [],
+            "cnt" : 0
         }
         await send_response(response, websocket)
     elif re[0].lower() == 'depression test':
@@ -36,7 +37,7 @@ async def process_data(websocket):
             "cnt" : 0
         }
         await send_response(response, websocket)
-        user_response = await asyncio.wait_for(websocket.recv(), timeout=10)
+        user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
         print('++++++++++++++',user_response)
         temp=user_response.split('==')
         print("{}('{}', websocket)".format(temp[1], user_response))
@@ -60,7 +61,7 @@ async def q1(data, websocket):
         }
     print('=====================','Reached here')
     await send_response(response, websocket)
-    user_response = await asyncio.wait_for(websocket.recv(), timeout=10)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
     print('++++++++++++++',user_response)
     temp=user_response.split('==')
     print("{}('{}', websocket)".format(temp[1], user_response))
@@ -82,7 +83,7 @@ async def q2(data, websocket):
         }
     print('=====================','Reached here')
     await send_response(response, websocket)
-    user_response = await asyncio.wait_for(websocket.recv(), timeout=10)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
     print('++++++++++++++',user_response)
     temp=user_response.split('==')
     print("{}('{}', websocket)".format(temp[1], user_response))
@@ -92,26 +93,415 @@ async def q3(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
+    print(req[0])
     response={
             "msg" : "I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion) ",
             "option" : ["1- Did not apply to me at all",
                         "2- Applied to me to some degree, or some of the time",
                         "3- Applied to me to a considerable degree or a good part of time",
                         "4- Applied to me very much or most of the time"],
-            "nextEvent" : 'q2',
+            "nextEvent" : 'q4',
             "cnt" : int(req[0])
 
         }
-    print('=====================','Reached here')
+    print('=====================','Reached here q3')
     await send_response(response, websocket)
-    user_response = await asyncio.wait_for(websocket.recv(), timeout=10)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
     print('++++++++++++++',user_response)
     temp=user_response.split('==')
     print("{}('{}', websocket)".format(temp[1], user_response))
     await eval("{}('{}', websocket)".format(temp[1], user_response))
 
+async def q4(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I found it difficult to work up the initiative to do things",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q5',
+            "cnt" : int(req[0])
 
+        }
+    print('=====================','Reached here')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
 
+async def q5(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I tended to over-react to situations",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q6',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q5')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q6(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I experienced trembling (e.g. in the hands)",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q7',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q6')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q7(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt that I was using a lot of nervous energy",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q8',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q7')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q8(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I was worried about situations in which I might panic and make a fool of myself",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q9',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q8')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q9(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : " I felt that I had nothing to look forward to",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q10',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q9')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q10(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I found myself getting troubled",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q11',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q11')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q11(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I found it difficult to relax",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q12',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q12')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q12(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt down-hearted and unhappy",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q13',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q12')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q13(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I was intolerant of anything that kept me from getting on with what I was doing",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q14',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q13')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q14(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt I was close to panic",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q15',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q14')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q15(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I was unable to become enthusiastic about anything",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q16',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q15')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q16(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt I wasn’t worth much as a person",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q17',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q16')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q17(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I thought I was quite sensitive",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q18',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q17')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q18(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I was aware of the action of my heart in the absence of physical exertion (e.g. sense of heart rate increase, heart missing a beat)",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q19',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q18')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q19(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt scared without any good reason",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q20',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q19')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q20(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I felt that life was meaningless ",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'q21',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q20')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def q21(data, websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+            "msg" : "I tended to over-react to situations",
+            "option" : ["1- Did not apply to me at all",
+                        "2- Applied to me to some degree, or some of the time",
+                        "3- Applied to me to a considerable degree or a good part of time",
+                        "4- Applied to me very much or most of the time"],
+            "nextEvent" : 'end',
+            "cnt" : int(req[0])
+
+        }
+    print('=====================','Reached here q21')
+    await send_response(response, websocket)
 
 
 async def default_response(websocket):
