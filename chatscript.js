@@ -1,11 +1,9 @@
 const socket = new WebSocket("ws://127.0.0.1:8005");
-var cnt=0;
 
 socket.addEventListener("open", () => {
     console.log("Connected to Python");
 });
 
-var cnt=0;
 
 function generateOptionButtons(options) {
     var optionsContainer = document.getElementById('options-container');
@@ -41,12 +39,6 @@ socket.addEventListener("message", (event) => {
     console.log('Breakpoint')
     const response = JSON.parse(event.data);
     console.log("Received response from Python:", response);
-    if(response.cnt!=0)
-    {
-        cnt+=response.cnt;
-    }
-    console.log('----------------------',cnt,'--------------------');
-    console.log('-------------------------------------------------');
     updatedUI(response);
 });
 
@@ -101,19 +93,24 @@ function sendMessage() {
 
 
 function updatedUI(response) {
-    console.log('Printing msg :'+response.msg);
-    console.log('Printing options : '+response.option)
-    
-    document.getElementById('chat-body').innerText = response.msg;
-    exampleOptions = response.option;
-    generateOptionButtons(exampleOptions);
-    document.getElementById('user-input').value = '';
-
-    if(response.cnt)
+    if(response.cnt>0)
     {
-        cnt+=response.cnt;
-        console.log('++++++++++++'+cnt+'+++++++++++++++++');
+        document.getElementById('end-display').innerText= 'PCAB chatbot is only a primary testing tool, might produce inaccurate information some times.'
+        socket.close();
+        document.getElementById('chat-body').innerText = ''
+        exampleOptions=[]
+        generateOptionButtons(exampleOptions);
+        document.getElementById('user-input').value = '';
+    }else{
+        console.log('Printing msg :'+response.msg);
+        console.log('Printing options : '+response.option)
+        
+        document.getElementById('chat-body').innerText = response.msg;
+        exampleOptions = response.option;
+        generateOptionButtons(exampleOptions);
+        document.getElementById('user-input').value = '';
+
+        nextEvent=response.nextEvent;
+        sendMessage();
     }
-    nextEvent=response.nextEvent;
-    sendMessage();
 }
