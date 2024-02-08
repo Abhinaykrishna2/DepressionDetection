@@ -4,6 +4,7 @@ socket.addEventListener("open", () => {
     console.log("Connected to Python");
 });
 
+var cnt=0;
 
 function generateOptionButtons(options) {
     var optionsContainer = document.getElementById('options-container');
@@ -60,21 +61,16 @@ function sendMessage() {
 
     if (exampleOptions[0] == 'Medical Prescription') {
         data += '==' + 'process_data'
-    } else {
-        if(nextEvent=='end')
-        {
-
-        }else{
-            buttonClickPromise.then(function() {
-                console.log('Button clicked');
-                data=document.getElementById('user-input').value;            
-            });
-            console.log('#####');
-            console.log(data);
-            console.log(nextEvent);
-            console.log('#####');
-            data += '==' + nextEvent;
-        }
+    } else { 
+        buttonClickPromise.then(function() {
+            console.log('Button clicked');
+            data=document.getElementById('user-input').value;            
+        });
+        console.log('#####');
+        console.log(data);
+        console.log(nextEvent);
+        console.log('#####');
+        data += '==' + nextEvent;
     }
 
     console.log(data);
@@ -93,7 +89,7 @@ function sendMessage() {
 
 
 function updatedUI(response) {
-    if(response.cnt>0)
+    if(response=='end')
     {
         document.getElementById('end-display').innerText= 'PCAB chatbot is only a primary testing tool, might produce inaccurate information some times.'
         socket.close();
@@ -104,12 +100,14 @@ function updatedUI(response) {
     }else{
         console.log('Printing msg :'+response.msg);
         console.log('Printing options : '+response.option)
-        
         document.getElementById('chat-body').innerText = response.msg;
         exampleOptions = response.option;
         generateOptionButtons(exampleOptions);
         document.getElementById('user-input').value = '';
-
+        cnt+=response.cnt -1;
+        console.log('--------------');
+        console.log(cnt);
+        console.log('--------------');
         nextEvent=response.nextEvent;
         sendMessage();
     }
