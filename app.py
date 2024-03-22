@@ -1,6 +1,9 @@
 import asyncio
 import json
 import websockets
+import openai
+
+openai.api_key = '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'
 
 async def handle_connection(websocket, path):
     print('Connected to JS')
@@ -20,10 +23,16 @@ async def process_data(websocket):
     re=data.split('==')
     if re[0].lower() == 'medical prescription':
         response={
-            "msg" : "May I kindly request a brief description of your current medical condition?",
+            "msg" : "Please enter your current problems",
             "option" : [],
+            "nextEvent" : 'LLMcall',
         }
         await send_response(response, websocket)
+        user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+        print('++++++++++++++',user_response)
+        temp=user_response.split('==')
+        print("{}('{}', websocket)".format(temp[1], user_response))
+        await eval("{}('{}', websocket)".format(temp[1], user_response))
     elif re[0].lower() == 'depression test':
         response={
             "msg" : "I had trouble relaxing and calming down.",
@@ -42,6 +51,25 @@ async def process_data(websocket):
         await eval("{}('{}', websocket)".format(temp[1], user_response))
     else:
         await default_response(websocket)
+    
+async def LLMcall(data,websocket):
+    print(data)
+    req=data.split('==')
+    question = 'My problem is, {}, can you suggest me some medicine'.format(req[0])
+    prompt = f"Question: {question}\nAnswer:"
+    response = openai.Completion.create(
+        engine="davinci-002",  
+        prompt=prompt,
+        max_tokens=35
+    )
+    answer = response.choices[0].text.strip()
+    response={
+        'ans' : answer,
+        'nextEvent' : 'end'
+    }
+    await send_response(response, websocket)
+
+
 
 async def q1(data, websocket):
     print(data)
@@ -498,6 +526,32 @@ async def q21(data, websocket):
             "cnt" : int(req[0])
         }
     print('=====================','Reached here q21')
+    await send_response(response, websocket)
+    user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
+    print('++++++++++++++',user_response)
+    temp=user_response.split('==')
+    print("{}('{}', websocket)".format(temp[1], user_response))
+    await eval("{}('{}', websocket)".format(temp[1], user_response))
+
+async def end(data,websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={}
+    if type(req[0])==int:
+        response={
+                "msg" : "",
+                "option" : '',
+                "nextEvent" : 'finish',
+                "cnt" : int(req[0])
+            }
+    else:
+        response={
+            "msg" : "",
+            "option" : '',
+            "nextEvent" : 'finish',
+        }
+    print('=====================','Reached end')
     await send_response(response, websocket)
 
 

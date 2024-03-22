@@ -25,6 +25,8 @@ function generateOptionButtons(options) {
             };
             optionsContainer.appendChild(button);
         }
+    }else{
+
     }
 }
 
@@ -89,15 +91,21 @@ function sendMessage() {
 
 
 function updatedUI(response) {
-    if(response=='end')
+    console.log('+++++++'+'}'+response.cnt);
+    if(response.nextEvent=='finish')
     {
         document.getElementById('end-display').innerText= 'PCAB chatbot is only a primary testing tool, might produce inaccurate information some times.'
         socket.close();
-        document.getElementById('chat-body').innerText = ''
-        exampleOptions=[]
-        generateOptionButtons(exampleOptions);
-        document.getElementById('user-input').value = '';
-    }else{
+        if (response.nextEvent === 'finish') {
+            window.location.href = 'new_page.html?message=' + encodeURIComponent(response.opt);
+        }
+    }
+    else if(response.nextEvent=='finish')
+    {
+        document.getElementById('end-display').innerText= 'Thank you for using PCAB, please note that PCAB may produce wrong information';
+        document.getElementById('chat-body').innerText=response.ans;
+    }
+    else{
         console.log('Printing msg :'+response.msg);
         console.log('Printing options : '+response.option)
         document.getElementById('chat-body').innerText = response.msg;
@@ -105,7 +113,7 @@ function updatedUI(response) {
         generateOptionButtons(exampleOptions);
         document.getElementById('user-input').value = '';
         cnt+=response.cnt -1;
-        console.log('--------------');
+        console.log('--------------'+cnt+response.cnt);
         console.log(cnt);
         console.log('--------------');
         nextEvent=response.nextEvent;
