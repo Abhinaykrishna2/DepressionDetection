@@ -55,7 +55,7 @@ async def process_data(websocket):
 async def LLMcall(data,websocket):
     print(data)
     req=data.split('==')
-    question = 'My problem is, {}, can you suggest me some medicine'.format(req[0])
+    question = '{}, can you suggest me some medicine'.format(req[0])
     prompt = f"Question: {question}\nAnswer:"
     response = openai.Completion.create(
         engine="davinci-002",  
@@ -65,8 +65,10 @@ async def LLMcall(data,websocket):
     answer = response.choices[0].text.strip()
     response={
         'ans' : answer,
-        'nextEvent' : 'end'
+        'nextEvent' : 'endMed'
     }
+    print(answer)
+    print('+++++++++LLM Response Generated')
     await send_response(response, websocket)
 
 
@@ -533,26 +535,7 @@ async def q21(data, websocket):
     print("{}('{}', websocket)".format(temp[1], user_response))
     await eval("{}('{}', websocket)".format(temp[1], user_response))
 
-async def end(data,websocket):
-    print(data)
-    pcab=data.split('==')
-    req=pcab[0].split('-')
-    response={}
-    if type(req[0])==int:
-        response={
-                "msg" : "",
-                "option" : '',
-                "nextEvent" : 'finish',
-                "cnt" : int(req[0])
-            }
-    else:
-        response={
-            "msg" : "",
-            "option" : '',
-            "nextEvent" : 'finish',
-        }
-    print('=====================','Reached end')
-    await send_response(response, websocket)
+
 
 
 async def default_response(websocket):
