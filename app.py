@@ -55,14 +55,13 @@ async def process_data(websocket):
 async def LLMcall(data,websocket):
     print(data)
     req=data.split('==')
-    question = '{}, can you suggest me some medicine'.format(req[0])
+    question = '{}, strictly suggest me with appropriate medicine or recovery procedure, the response has to be in a proper format with no more than 150 tokens'.format(req[0])
     prompt = f"Question: {question}\nAnswer:"
-    response = openai.Completion.create(
-        engine="davinci-002",  
-        prompt=prompt,
-        max_tokens=35
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  
+        messages=[{"role": "system", "content": prompt}],
     )
-    answer = response.choices[0].text.strip()
+    answer = response['choices'][0]['message']['content']
     response={
         'ans' : answer,
         'nextEvent' : 'endMed'
@@ -536,7 +535,16 @@ async def q21(data, websocket):
     await eval("{}('{}', websocket)".format(temp[1], user_response))
 
 
-
+async def end(data,websocket):
+    print(data)
+    pcab=data.split('==')
+    req=pcab[0].split('-')
+    response={
+        'nextEvent':'endDep',
+        'cnt' : int(req[0])
+    }
+    print('=====================','Dep Test Finished')
+    await send_response(response, websocket)
 
 async def default_response(websocket):
     print('Default response')

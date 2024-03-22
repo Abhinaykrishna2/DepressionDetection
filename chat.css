@@ -14,6 +14,18 @@ body {
     margin: 0;
 }
 
+.end-display{
+    position: absolute;
+    bottom: 0; /* Aligns the bottom of .Display to the bottom of .chat-container */
+    left: 50%; /* Centers .Display horizontally */
+    transform: translateX(-50%); /* Corrects the horizontal centering */
+    text-align: center; /* Centers text horizontally within .Display */
+    font-size: 15px;
+    font-weight: bold;
+    font-style: italic;
+    width: 100%;
+}
+
 .chat-container {
     width: 700px;
     height: 600px;
@@ -96,4 +108,10 @@ button {
 }
 button:hover {
     background-color: #217dbb;
+}
+.Display {
+    text-align: center; 
+    font-size: 15px; 
+    font-weight: bold; 
+    font-style: italic; 
 }

@@ -96,8 +96,16 @@ function updatedUI(response) {
     if(response.nextEvent=='endMed')
     {
         socket.close();
-        document.getElementById('end-display').innerText= 'Thank you for using PCAB, please note that PCAB may produce wrong information';
-        document.getElementById('chat-body').innerText=response.ans;
+        document.getElementById('chat-body').innerText='Problem solved! 😊';
+        document.getElementById('end-display').innerText= "Thank you for using PCAB. Please note, it may provide incorrect information";
+        document.getElementById('ipms').innerText=response.ans;
+    }
+    else if(response.nextEvent=='endDep')
+    {
+        socket.close();
+        document.getElementById('chat-body').innerText='Depression detection completed!! 😊'
+        document.getElementById('end-display').innerText= "Thank you for using PCAB. Please note, it may provide incorrect information";
+        document.getElementById('ipms').innerText=response.ans;
     }
     else{
         console.log('Printing msg :'+response.msg);
