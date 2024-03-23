@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Upload UI</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #00FFFF; /* Aqua color using hex value */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .upload-container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .upload-icon {
+        background-image: url('imgup.jpeg');
+        background-size: cover; 
+        background-repeat: no-repeat;
+        width: 100px; /* Adjust as needed */
+        height: 100px; /* Adjust as needed */
+        margin: 0 auto 20px; /* Center horizontally and add bottom margin */
+    }
+
+    .upload-text {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Add bottom margin */
+        font-size: 18px;
+        color: #666;
+    }
+
+    .upload-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .upload-button:hover {
+        background-color: #0056b3;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="upload-container">
+    <div class="upload-icon"></div>
+    <div class="upload-text">Drag & drop your image here or click to browse</div>
+    <label for="file-upload" class="upload-button">Upload Image</label>
+    <input type="file" id="file-upload">
+</div>
+
+</body>
+</html>
