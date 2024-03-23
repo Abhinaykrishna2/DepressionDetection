@@ -97,15 +97,28 @@ function updatedUI(response) {
     {
         socket.close();
         document.getElementById('chat-body').innerText='Problem solved! 😊';
-        document.getElementById('end-display').innerText= "Thank you for using PCAB. Please note, it may provide incorrect information";
+        document.getElementById('end-display').innerHTML= "<br><br><br><br><br><br><br><br><br><br><br><br><p>Thank you for using PCAB. Please note, it may provide incorrect information<p>";
         document.getElementById('ipms').innerText=response.ans;
     }
     else if(response.nextEvent=='endDep')
     {
         socket.close();
-        document.getElementById('chat-body').innerText='Depression detection completed!! 😊'
-        document.getElementById('end-display').innerText= "Thank you for using PCAB. Please note, it may provide incorrect information";
-        document.getElementById('ipms').innerText=response.ans;
+        document.getElementById('chat-body').innerText='Depression detection test completed!! 😊';
+        document.getElementById('end-display').innerHTML= "<br><br><br><br><br><br><br><br><br><br><br><br><p>Thank you for using PCAB. Please note, it may provide incorrect information<p>";
+        if(cnt>=34)
+        {
+            document.getElementById('ipms').innerText = 'You are experiencing extremely severe Depression, Anxiety and Stress, Please consult a doctor immediately';
+        }else if(cnt>=20 && cnt<34)
+        {
+            document.getElementById('ipms').innerText = 'You are experiencing severe Depression and Stress, extreme Anxiety, Please consult a doctor immediately';
+        }
+        else if(cnt>14 && cnt<20)
+        {
+            document.getElementById('ipms').innerText = "You are experiencing moderate depression, anxiety, and stress. You may plan on visiting a doctor";
+        }else{
+            document.getElementById('ipms').innerText = "Your DAS indicators are normal, there is no need of visiting a doctor";
+        }
+        document.getElementById('options-container').innerText = '';
     }
     else{
         console.log('Printing msg :'+response.msg);
