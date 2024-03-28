@@ -110,7 +110,7 @@ function updatedUI(response) {
             document.getElementById('ipms').innerText = 'You are experiencing extremely severe Depression, Anxiety and Stress, Please consult a doctor immediately';
         }else if(cnt>=20 && cnt<34)
         {
-            document.getElementById('ipms').innerText = 'You are experiencing severe Depression and Stress, extreme Anxiety, Please consult a doctor immediately';
+            document.getElementById('ipms').innerText = 'You are experiencing Depression and Stress, extreme Anxiety, Please try to consult a doctor';
         }
         else if(cnt>14 && cnt<20)
         {
