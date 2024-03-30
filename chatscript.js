@@ -110,13 +110,13 @@ function updatedUI(response) {
             document.getElementById('ipms').innerText = 'You are experiencing extremely severe Depression, Anxiety and Stress, Please consult a doctor immediately';
         }else if(cnt>=20 && cnt<34)
         {
-            document.getElementById('ipms').innerText = 'You are experiencing Depression and Stress, extreme Anxiety, Please try to consult a doctor';
+            document.getElementById('ipms').innerText = 'You are experiencing moderate Depression and Stress, extreme Anxiety, Please try to consult a doctor';
         }
         else if(cnt>14 && cnt<20)
         {
-            document.getElementById('ipms').innerText = "You are experiencing moderate depression, anxiety, and stress. You may plan on visiting a doctor";
+            document.getElementById('ipms').innerText = "You are experiencing mild depression, anxiety, and stress. You may plan on visiting a doctor";
         }else{
-            document.getElementById('ipms').innerText = "Your DAS indicators are normal, there is no need of visiting a doctor";
+            document.getElementById('ipms').innerText = "Your indicators are normal, there is no need of visiting a doctor";
         }
         document.getElementById('options-container').innerText = '';
     }
