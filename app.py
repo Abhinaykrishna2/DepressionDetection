@@ -3,11 +3,6 @@ import json
 import websockets
 import time
 import openai
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Flatten
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.layers import MaxPooling2D
 import numpy as np
 import cv2
 
@@ -15,35 +10,37 @@ openai.api_key = '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'
 
 async def camcall():
     cap = cv2.VideoCapture(0)
-    start_time = time.time()
-    while (time.time() - start_time) < 3:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        facecasc = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = facecasc.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+    if cap.isOpened() :
+        model.load_weights('model.h5')
+        start_time = time.time()
+        while (time.time() - start_time) < 3:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            facecasc = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = facecasc.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
 
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
-            roi_gray = gray[y:y + h, x:x + w]
-            cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
-            prediction = model.predict(cropped_img)
-            maxindex = int(np.argmax(prediction))
-            temp = ''
-            if maxindex == 0 or maxindex == 2 or maxindex == 5:
-                temp = 'Depressed'
-            else:
-                temp = 'Normal'
-            cv2.putText(frame, temp, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
+                roi_gray = gray[y:y + h, x:x + w]
+                cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
+                prediction = model.predict(cropped_img)
+                maxindex = int(np.argmax(prediction))
+                temp = ''
+                if maxindex == 0 or maxindex == 2 or maxindex == 5:
+                    temp = 'Depressed'
+                else:
+                    temp = 'Normal'
+                cv2.putText(frame, temp, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
-        cv2.imshow('Video', cv2.resize(frame, (1600, 960), interpolation=cv2.INTER_CUBIC))
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            cv2.imshow('Video', cv2.resize(frame, (1600, 960), interpolation=cv2.INTER_CUBIC))
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-    cap.release()
-    cv2.destroyAllWindows()
-    return
+        cap.release()
+        cv2.destroyAllWindows()
+        return
 
 
 async def handle_connection(websocket, path):
@@ -75,7 +72,7 @@ async def process_data(websocket):
         print("{}('{}', websocket)".format(temp[1], user_response))
         await eval("{}('{}', websocket)".format(temp[1], user_response))
     elif re[0].lower() == 'depression test':
-        await camcall()
+        #await camcall()
         response={
             "msg" : "I had trouble relaxing and calming down.",
             "option" : ["1- Did not apply to me at all",
@@ -118,6 +115,7 @@ async def q1(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
+    print(int(req[0]))
     response={
             "msg" : "I was aware of dryness of my mouth.",
             "option" : ["1- Did not apply to me at all",
@@ -139,7 +137,7 @@ async def q2(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I couldn’t seem to experience any positive feeling at all",
             "option" : ["1- Did not apply to me at all",
@@ -161,7 +159,7 @@ async def q3(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I experienced breathing difficulty (e.g. excessively rapid breathing, breathlessness in the absence of physical exertion) ",
             "option" : ["1- Did not apply to me at all",
@@ -183,7 +181,7 @@ async def q4(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I found it difficult to work up the initiative to do things",
             "option" : ["1- Did not apply to me at all",
@@ -227,7 +225,7 @@ async def q6(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I experienced trembling (e.g. in the hands)",
             "option" : ["1- Did not apply to me at all",
@@ -271,7 +269,7 @@ async def q8(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I was worried about situations in which I might panic and make a fool of myself",
             "option" : ["1- Did not apply to me at all",
@@ -315,7 +313,7 @@ async def q10(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I found myself getting troubled",
             "option" : ["1- Did not apply to me at all",
@@ -359,7 +357,7 @@ async def q12(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I felt down-hearted and unhappy",
             "option" : ["1- Did not apply to me at all",
@@ -381,7 +379,7 @@ async def q13(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))
     response={
             "msg" : "I was intolerant of anything that kept me from getting on with what I was doing",
             "option" : ["1- Did not apply to me at all",
@@ -403,7 +401,7 @@ async def q14(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))  
     response={
             "msg" : "I felt I was close to panic",
             "option" : ["1- Did not apply to me at all",
@@ -425,7 +423,7 @@ async def q15(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))  
     response={
             "msg" : "I was unable to become enthusiastic about anything",
             "option" : ["1- Did not apply to me at all",
@@ -447,7 +445,7 @@ async def q16(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))  
     response={
             "msg" : "I felt I wasn’t worth much as a person",
             "option" : ["1- Did not apply to me at all",
@@ -469,7 +467,7 @@ async def q17(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
-    
+    print(int(req[0]))  
     response={
             "msg" : "I thought I was quite sensitive",
             "option" : ["1- Did not apply to me at all",
