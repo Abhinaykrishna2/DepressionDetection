@@ -5,43 +5,12 @@ import time
 import openai
 import numpy as np
 import cv2
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import MaxPooling2D
 
 openai.api_key = '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'
-
-async def camcall():
-    cap = cv2.VideoCapture(0)
-    if cap.isOpened() :
-        model.load_weights('model.h5')
-        start_time = time.time()
-        while (time.time() - start_time) < 3:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            facecasc = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = facecasc.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
-
-            for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
-                roi_gray = gray[y:y + h, x:x + w]
-                cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
-                prediction = model.predict(cropped_img)
-                maxindex = int(np.argmax(prediction))
-                temp = ''
-                if maxindex == 0 or maxindex == 2 or maxindex == 5:
-                    temp = 'Depressed'
-                else:
-                    temp = 'Normal'
-                cv2.putText(frame, temp, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
-
-            cv2.imshow('Video', cv2.resize(frame, (1600, 960), interpolation=cv2.INTER_CUBIC))
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
-        return
-
 
 async def handle_connection(websocket, path):
     print('Connected to JS')
@@ -72,7 +41,7 @@ async def process_data(websocket):
         print("{}('{}', websocket)".format(temp[1], user_response))
         await eval("{}('{}', websocket)".format(temp[1], user_response))
     elif re[0].lower() == 'depression test':
-        #await camcall()
+        camcall()
         response={
             "msg" : "I had trouble relaxing and calming down.",
             "option" : ["1- Did not apply to me at all",
@@ -126,6 +95,7 @@ async def q1(data, websocket):
             "cnt" : int(req[0])
         }
     print('=====================','Reached here')
+    camcall()
     await send_response(response, websocket)
     user_response = await asyncio.wait_for(websocket.recv(), timeout=100)
     print('++++++++++++++',user_response)
@@ -181,6 +151,7 @@ async def q4(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
+    camcall()
     print(int(req[0]))
     response={
             "msg" : "I found it difficult to work up the initiative to do things",
@@ -268,6 +239,7 @@ async def q7(data, websocket):
 async def q8(data, websocket):
     print(data)
     pcab=data.split('==')
+    camcall()
     req=pcab[0].split('-')
     print(int(req[0]))
     response={
@@ -378,6 +350,7 @@ async def q12(data, websocket):
 async def q13(data, websocket):
     print(data)
     pcab=data.split('==')
+    camcall()
     req=pcab[0].split('-')
     print(int(req[0]))
     response={
@@ -423,6 +396,7 @@ async def q15(data, websocket):
     print(data)
     pcab=data.split('==')
     req=pcab[0].split('-')
+    camcall()
     print(int(req[0]))  
     response={
             "msg" : "I was unable to become enthusiastic about anything",
@@ -576,6 +550,7 @@ async def q21(data, websocket):
 
 async def end(data,websocket):
     print(data)
+    camcall()
     pcab=data.split('==')
     req=pcab[0].split('-')
     response={
@@ -589,6 +564,55 @@ async def default_response(websocket):
     print('Default response')
     response = {"msg": "I didn't understand that. Please choose a valid option.", "option": []}
     await send_response(response, websocket)
+
+def camcall():
+    cap = cv2.VideoCapture(0)
+
+    model = Sequential()
+    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(48,48,1)))
+    model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(7, activation='softmax'))
+    if cap.isOpened() :
+        model.load_weights('model.h5')
+        start_time = time.time()
+        while (time.time() - start_time) < 2.5:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            facecasc = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = facecasc.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
+
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y-50), (x+w, y+h+10), (255, 0, 0), 2)
+                roi_gray = gray[y:y + h, x:x + w]
+                cropped_img = np.expand_dims(np.expand_dims(cv2.resize(roi_gray, (48, 48)), -1), 0)
+                prediction = model.predict(cropped_img)
+                maxindex = int(np.argmax(prediction))
+                temp = ''
+                if maxindex == 0 or maxindex == 2 or maxindex == 5:
+                    temp = 'Depressed'
+                else:
+                    temp = 'Normal'
+                cv2.putText(frame, temp, (x+20, y-60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+
+            cv2.imshow('Video', cv2.resize(frame, (1600, 960), interpolation=cv2.INTER_CUBIC))
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
+        cv2.destroyAllWindows()
+        return
 
 async def send_response(response, websocket):
     response_json = json.dumps(response)
